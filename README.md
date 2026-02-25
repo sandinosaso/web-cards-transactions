@@ -34,6 +34,7 @@ yarn dev          # Start dev server at http://localhost:3000
 | `yarn test:e2e` | Run Playwright E2E tests (starts dev server automatically) |
 | `yarn test:e2e:ui` | Open Playwright UI mode |
 | `yarn storybook` | Start Storybook on port 6006 |
+| `yarn build-storybook` | Build static Storybook site |
 | `yarn typecheck` | TypeScript type check without building |
 | `yarn lint` | Lint all source files |
 | `yarn lint:fix` | Lint + auto-fix all source files |
@@ -52,7 +53,8 @@ src/
 │       └── utils/        # filterTransactions — pure filtering logic
 ├── shared/
 │   ├── api/          # RTK Query cardsApi (createApi + endpoints)
-│   └── ui/           # Reusable presentational components (CardTile, AmountFilter, etc.)
+│   ├── ui/           # Reusable presentational components (CardTile, AmountFilter, etc.)
+│   └── utils/        # cardColors (type→colour mapping), useWhyDidYouRender (dev-only)
 ├── i18n/             # i18next setup + translation files (en.json)
 ├── test/             # Vitest setup + shared renderWithProviders helper
 └── ApiClient/        # Fake data layer (JSON + typed async functions)
@@ -121,17 +123,16 @@ All spacing, colours, and typography are driven by a typed `DefaultTheme`. No ra
 All user-visible strings are in `src/i18n/locales/en.json`. Currency formatting uses `Intl.NumberFormat` (locale-aware, not hard-coded).
 
 ### Testing strategy
-- **Unit**: `filterTransactionsByMinAmount` — pure function with edge cases (empty, NaN, negative, zero, boundary)
-- **Component**: `CardTile` (keyboard, aria-pressed), `AmountFilter` (validation, accessibility), `CardsPage` (full integration: loading → data → filter → card switch)
-- **E2E**: `cards.spec.ts` — user journeys including URL persistence, filter reset on card switch, keyboard navigation
+- **Unit**: `filterTransactionsByMinAmount` — pure function with edge cases (empty, NaN, negative, zero, boundary). `cardsApi` — RTK Query endpoints (cache tags, error handling, `CardNotFoundError`)
+- **Component**: `CardTile` (keyboard, aria-pressed), `AmountFilter` (validation, accessibility), `CardsPage` (full integration: loading → data → filter → card switch), `TransactionListSection` (empty state, colour mapping), `ErrorBoundary` (fallback rendering, recovery), `CardsStateContext` (split context isolation, URL sync)
+- **E2E**: `cards.spec.ts` — 10 user journeys including URL persistence, filter reset on card switch, keyboard navigation, RTK Query caching verification
 
 ---
 
 ## Design notes
 
-The card colours (`#3b5bdb` for Private, `#2f9e44` for Business) were inferred from the design PNG since it is a binary file. If these differ from the Figma source of truth, the fix is a one-line change in `src/ApiClient/data/cards.json`.
-
 If I were working alongside a designer I would:
+
 1. Ask for Figma token exports or a design token file rather than picking colours from a static image
 2. Confirm the empty state and loading state designs (not always in the happy-path screens)
 3. Confirm responsive breakpoints — the current layout wraps cards with `flex-wrap`
