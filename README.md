@@ -36,6 +36,7 @@ yarn dev          # Start dev server at http://localhost:3000
 | `yarn storybook` | Start Storybook on port 6006 |
 | `yarn typecheck` | TypeScript type check without building |
 | `yarn lint` | Lint all source files |
+| `yarn lint:fix` | Lint + auto-fix all source files |
 
 ---
 
@@ -59,6 +60,38 @@ src/
 e2e/                  # Playwright tests
 .storybook/           # Storybook config
 ```
+
+---
+
+## CI Pipeline (GitHub Actions)
+
+The workflow at `.github/workflows/ci.yml` runs on:
+- Every **pull request** targeting `main`
+- **Manual dispatch** (`workflow_dispatch`) from any branch
+
+| Job | What it does | Depends on |
+|---|---|---|
+| 🔍 **quality** | `yarn lint` + `yarn typecheck` | — |
+| 🧪 **unit** | `yarn test:coverage` (80 % thresholds) | — |
+| 🎭 **e2e** | Playwright headless Chromium | — |
+| 📦 **build** | `yarn build` → upload `dist/` artifact | quality, unit, e2e |
+
+`quality`, `unit`, and `e2e` run **in parallel** — the `build` job only starts when all three pass. The `dist/` folder is uploaded as a GitHub Actions artifact, ready to be deployed to S3, Cloudfront, Vercel, or any static hosting.
+
+Playwright browsers are cached across runs to keep E2E setup fast.
+
+---
+
+## Git Hooks (Husky + lint-staged)
+
+Pre-commit hooks run automatically on every `git commit`:
+
+1. **lint-staged** — runs `eslint --fix` only on staged `*.ts` / `*.tsx` files (fast, scoped)
+2. **vitest --changed** — runs only the tests affected by uncommitted changes (not the full suite)
+
+This ensures broken code never enters the commit history. Hooks are installed automatically via the `prepare` script when running `yarn install`.
+
+To skip in emergencies: `git commit --no-verify`
 
 ---
 

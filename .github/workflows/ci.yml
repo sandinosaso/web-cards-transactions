@@ -1,0 +1,185 @@
+# ─────────────────────────────────────────────────────────────
+# CI Pipeline — DKB CoFa Cards & Transactions
+# ─────────────────────────────────────────────────────────────
+# Triggers:
+#   • Every PR targeting main
+#   • Manual dispatch (workflow_dispatch) on any branch
+#
+# Jobs (parallelised where possible):
+#   quality  → lint + typecheck
+#   unit     → vitest with coverage thresholds (80 %)
+#   e2e      → playwright headless chromium
+#   build    → production bundle (dist/) uploaded as artifact
+# ─────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # manual trigger from any branch
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+# ── shared setup ────────────────────────────────────────────
+# Reused across jobs via a composite action would be ideal in a
+# real monorepo, but for a single-app repo a YAML anchor or
+# repeating the 3-step setup is clearer.
+
+jobs:
+  # ── 1. Lint + Typecheck (fast gate) ───────────────────────
+  quality:
+    name: 🔍 Lint & Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node + Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  # ── 2. Unit & Integration Tests ───────────────────────────
+  unit:
+    name: 🧪 Unit & Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node + Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run tests with coverage
+        run: yarn test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+  # ── 3. E2E Tests (Playwright) ─────────────────────────────
+  e2e:
+    name: 🎭 E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node + Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      # Cache Playwright browsers to speed up subsequent runs
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (on cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run E2E tests
+        run: yarn test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+  # ── 4. Production Build ───────────────────────────────────
+  build:
+    name: 📦 Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [quality, unit, e2e]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node + Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build production bundle
+        run: yarn build
+
+      - name: Upload production bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 30
+
+      # ── Simulated deploy step ─────────────────────────────
+      # In a real pipeline this would push to S3, Cloudfront,
+      # Vercel, or trigger a deployment webhook.
+      - name: 🚀 Simulate deploy
+        run: |
+          echo "──────────────────────────────────────────"
+          echo "✅  Production build ready in dist/"
+          echo "    $(du -sh dist/ | cut -f1) total"
+          echo "    $(find dist/ -name '*.js' | wc -l | xargs) JS files"
+          echo "    $(find dist/ -name '*.css' | wc -l | xargs) CSS files"
+          echo ""
+          echo "  Ready to deploy to S3 / Cloudfront / Vercel"
+          echo "──────────────────────────────────────────"
