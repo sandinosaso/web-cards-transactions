@@ -1,20 +1,29 @@
 [
   {
-    "id": "lkmfkl-mlfkm-dlkfm",
+    "id": "card-1",
     "description": "Private Card",
     "type": "private",
     "cardHolder": "Max Mustermann",
-    "maskedCardNumber": "4242",
+    "maskedCardNumber": "**** **** **** 4242",
     "expiryDate": "12/28",
     "network": "Visa"
   },
   {
-    "id": "elek-n3lk-4m3lk4",
+    "id": "card-2",
     "description": "Business Card",
     "type": "business",
     "cardHolder": "Max Mustermann",
-    "maskedCardNumber": "8765",
+    "maskedCardNumber": "**** **** **** 8765",
     "expiryDate": "09/27",
+    "network": "Mastercard"
+  },
+  {
+    "id": "card-3",
+    "description": "Shared Expense Card",
+    "type": "shared",
+    "cardHolder": "DKB Code Factory GmbH",
+    "maskedCardNumber": "**** **** **** 1357",
+    "expiryDate": "03/29",
     "network": "Visa"
   }
 ]

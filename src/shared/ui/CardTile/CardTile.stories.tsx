@@ -48,3 +48,27 @@ export const BusinessCardSelected: Story = {
     isSelected: true,
   },
 };
+
+export const SharedExpenseCard: Story = {
+  args: {
+    id: "card-3",
+    description: "Shared Expense Card",
+    type: "shared" as const,
+    cardHolder: "DKB Code Factory GmbH",
+    maskedCardNumber: "1357",
+    expiryDate: "03/29",
+    isSelected: false,
+  },
+};
+
+export const SharedExpenseCardSelected: Story = {
+  args: {
+    id: "card-3",
+    description: "Shared Expense Card",
+    type: "shared" as const,
+    cardHolder: "DKB Code Factory GmbH",
+    maskedCardNumber: "1357",
+    expiryDate: "03/29",
+    isSelected: true,
+  },
+};

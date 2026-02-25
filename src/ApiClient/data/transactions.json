@@ -1,16 +1,28 @@
 {
-  "lkmfkl-mlfkm-dlkfm": [
-    { "id": "priv-tx-001", "amount": 123.88, "description": "Food" },
-    { "id": "priv-tx-002", "amount": 33.48, "description": "Snack" },
-    { "id": "priv-tx-003", "amount": 288.38, "description": "Tickets" },
-    { "id": "priv-tx-004", "amount": 15.99, "description": "Coffee" },
-    { "id": "priv-tx-005", "amount": 450.00, "description": "Flight booking" }
+  "card-1": [
+    { "id": "tx-1-1", "description": "Food", "amount": 42.50 },
+    { "id": "tx-1-2", "description": "Snack", "amount": 3.80 },
+    { "id": "tx-1-3", "description": "Electronics", "amount": 299.99 },
+    { "id": "tx-1-4", "description": "Gym Membership", "amount": 29.90 },
+    { "id": "tx-1-5", "description": "Book Store", "amount": 18.50 },
+    { "id": "tx-1-6", "description": "Coffee", "amount": 4.20 },
+    { "id": "tx-1-7", "description": "Monthly Subscription", "amount": 12.99 }
   ],
-  "elek-n3lk-4m3lk4": [
-    { "id": "biz-tx-001", "amount": 21.88, "description": "T-Shirt" },
-    { "id": "biz-tx-002", "amount": 533.48, "description": "Smart Phone" },
-    { "id": "biz-tx-003", "amount": 2.58, "description": "Chocolate Bar" },
-    { "id": "biz-tx-004", "amount": 1200.00, "description": "Software License" },
-    { "id": "biz-tx-005", "amount": 89.99, "description": "Office Supplies" }
+  "card-2": [
+    { "id": "tx-2-1", "description": "Office Supplies", "amount": 120.00 },
+    { "id": "tx-2-2", "description": "Client Dinner", "amount": 85.40 },
+    { "id": "tx-2-3", "description": "Software License", "amount": 499.00 },
+    { "id": "tx-2-4", "description": "Train Ticket", "amount": 67.80 },
+    { "id": "tx-2-5", "description": "Conference Fee", "amount": 350.00 }
+  ],
+  "card-3": [
+    { "id": "tx-3-1", "description": "Team Lunch", "amount": 156.30 },
+    { "id": "tx-3-2", "description": "Cloud Hosting", "amount": 89.00 },
+    { "id": "tx-3-3", "description": "Figma Subscription", "amount": 45.00 },
+    { "id": "tx-3-4", "description": "Office Snacks", "amount": 32.60 },
+    { "id": "tx-3-5", "description": "Taxi to Airport", "amount": 54.20 },
+    { "id": "tx-3-6", "description": "Co-working Space", "amount": 200.00 },
+    { "id": "tx-3-7", "description": "Team Building Event", "amount": 420.00 },
+    { "id": "tx-3-8", "description": "Printer Paper", "amount": 8.90 }
   ]
 }

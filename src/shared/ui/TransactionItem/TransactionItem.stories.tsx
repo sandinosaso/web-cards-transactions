@@ -8,7 +8,7 @@ const meta = {
   args: {
     description: "Coffee",
     amount: 4.99,
-    backgroundColor: "#3b5bdb",
+    backgroundColor: "#28D1CA",
   },
 } satisfies Meta<typeof TransactionItem>;
 
@@ -29,6 +29,14 @@ export const BusinessCardColor: Story = {
   args: {
     description: "Smart Phone",
     amount: 533.48,
-    backgroundColor: "#2f9e44",
+    backgroundColor: "#138DEA",
+  },
+};
+
+export const SharedExpenseCardColor: Story = {
+  args: {
+    description: "Team Lunch",
+    amount: 156.30,
+    backgroundColor: "#7C5CFC",
   },
 };

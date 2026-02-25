@@ -1,4 +1,4 @@
-export type CardType = "private" | "business";
+export type CardType = "private" | "business" | "shared";
 
 export interface Card {
   id: string;
@@ -23,7 +23,17 @@ export class CardNotFoundError extends Error {
   }
 }
 
+/**
+ * Simulates network latency so loading/caching states are visible during
+ * development and demos. Disabled in test environment to keep tests fast.
+ */
+const simulateLatency = (ms: number): Promise<void> =>
+  import.meta.env.MODE === "test"
+    ? Promise.resolve()
+    : new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function getCards(): Promise<Card[]> {
+  await simulateLatency(300);
   // JSON imports widen 'type' to string; cast to the typed Card[] shape we own.
   const { default: cards } = await import("./data/cards.json");
   return cards as Card[];
@@ -32,6 +42,7 @@ export async function getCards(): Promise<Card[]> {
 export async function getTransactions(
   cardId: string
 ): Promise<Transaction[]> {
+  await simulateLatency(500);
   const { default: transactions } = (await import(
     "./data/transactions.json"
   )) as { default: Record<string, Transaction[]> };
