@@ -1,0 +1,31 @@
+{
+  "app": {
+    "title": "Cards & Transactions"
+  },
+  "cards": {
+    "heading": "Your Cards",
+    "loading": "Loading cards…",
+    "empty": "No cards available.",
+    "error": "Failed to load cards. Please try again.",
+    "retry": "Retry",
+    "select": "Select card {{description}}"
+  },
+  "filter": {
+    "label": "Filter by minimum amount",
+    "placeholder": "e.g. 50.00",
+    "hint": "Showing transactions with amount ≥ {{amount}}"
+  },
+  "transactions": {
+    "heading": "Transactions",
+    "loading": "Loading transactions…",
+    "empty": "No transactions match your filter.",
+    "emptyCard": "No transactions for this card.",
+    "error": "Failed to load transactions. Please try again.",
+    "retry": "Retry",
+    "amount": "{{amount, currency}}"
+  },
+  "errors": {
+    "unexpected": "Something went wrong.",
+    "goBack": "Go back"
+  }
+}

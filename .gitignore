@@ -1,0 +1,56 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+
+# ─── Build outputs ────────────────────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+
+# ─── Vite ─────────────────────────────────────────────────────────────────────
+*.local
+
+# ─── Test & Coverage ──────────────────────────────────────────────────────────
+coverage/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/blob-report/
+
+# ─── Storybook build output (NOT .storybook config folder) ────────────────────
+storybook-static/
+
+# ─── TypeScript ───────────────────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Editor ───────────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# ─── Environment / Secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Yarn (keep .yarn/releases and .yarn/plugins, ignore cache) ───────────────
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# My custom settings for LLM code generation (ignore .github/copilot-instructions.md)
+# Maybe worth showing on the Demo as well to demonstrate how I use LLMs in my workflow, and how I set up the project to support that.
+.github/copilot-instructions.md

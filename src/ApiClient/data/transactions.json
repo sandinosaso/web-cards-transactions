@@ -1,0 +1,16 @@
+{
+  "lkmfkl-mlfkm-dlkfm": [
+    { "id": "priv-tx-001", "amount": 123.88, "description": "Food" },
+    { "id": "priv-tx-002", "amount": 33.48, "description": "Snack" },
+    { "id": "priv-tx-003", "amount": 288.38, "description": "Tickets" },
+    { "id": "priv-tx-004", "amount": 15.99, "description": "Coffee" },
+    { "id": "priv-tx-005", "amount": 450.00, "description": "Flight booking" }
+  ],
+  "elek-n3lk-4m3lk4": [
+    { "id": "biz-tx-001", "amount": 21.88, "description": "T-Shirt" },
+    { "id": "biz-tx-002", "amount": 533.48, "description": "Smart Phone" },
+    { "id": "biz-tx-003", "amount": 2.58, "description": "Chocolate Bar" },
+    { "id": "biz-tx-004", "amount": 1200.00, "description": "Software License" },
+    { "id": "biz-tx-005", "amount": 89.99, "description": "Office Supplies" }
+  ]
+}
