@@ -41,14 +41,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node + Yarn
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
@@ -67,14 +67,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node + Yarn
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
@@ -98,14 +98,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node + Yarn
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
@@ -148,14 +148,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node + Yarn
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
