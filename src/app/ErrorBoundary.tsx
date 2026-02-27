@@ -8,37 +8,37 @@ const ErrorWrapper = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 32px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: ${({ theme }) => theme.spacing.xl};
+  font-family: ${({ theme }) => theme.typography.fontFamily};
   text-align: center;
 `;
 
 const ErrorTitle = styled.h1`
-  font-size: 1.5rem;
-  color: #c92a2a;
-  margin-bottom: 16px;
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  color: ${({ theme }) => theme.colors.status.error};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 const ErrorBody = styled.p`
-  color: #6c757d;
-  margin-bottom: 24px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 const ReloadButton = styled.button`
-  background-color: #3b5bdb;
+  background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.xl};
+  font-size: ${({ theme }) => theme.typography.fontSize.md};
   cursor: pointer;
 
   &:hover {
-    background-color: #364fc7;
+    opacity: 0.88;
   }
 
   &:focus-visible {
-    outline: 2px solid #4dabf7;
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
     outline-offset: 2px;
   }
 `;

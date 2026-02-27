@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "@dkb-cofa/i18n/formatCurrency";
+import { useDebouncedCallback } from "@dkb-cofa/shared/utils/useDebouncedCallback";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -59,37 +61,28 @@ export function AmountFilter({ value, onChange }: Props): React.ReactElement {
   const { t } = useTranslation();
 
   // Local state drives the input for instant visual feedback.
-  // onChange (which writes to the URL) fires only after DEBOUNCE_MS of quiet.
+  // debouncedChange writes to the URL only after DEBOUNCE_MS of quiet.
   const [inputValue, setInputValue] = useState(value);
+  const { call: debouncedChange, cancel: cancelPendingChange } =
+    useDebouncedCallback(onChange, DEBOUNCE_MS);
 
-  // Guards against the external reset (card switch clears the URL param)
-  // triggering a spurious debounce write back to the URL.
-  const skipDebounceRef = useRef(false);
-
-  // Sync when the external value resets (e.g. card switch wipes minAmount)
+  // Sync when the external value resets (e.g. card switch wipes minAmount).
+  // Cancelling the pending debounce first prevents a stale write from landing
+  // after the parent has already cleared the value.
   useEffect(() => {
     if (value !== inputValue) {
-      skipDebounceRef.current = true;
+      cancelPendingChange();
       setInputValue(value);
     }
     // Intentionally omit inputValue: we only react to external changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
-
-  // Debounce: flush to URL only after user stops typing
-  useEffect(() => {
-    if (skipDebounceRef.current) {
-      skipDebounceRef.current = false;
-      return;
-    }
-    const id = setTimeout(() => onChange(inputValue), DEBOUNCE_MS);
-    return () => clearTimeout(id);
-  }, [inputValue, onChange]);
+  }, [value, cancelPendingChange]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const raw = e.target.value;
     if (raw === "" || /^\d*\.?\d*$/.test(raw)) {
       setInputValue(raw);
+      debouncedChange(raw);
     }
   }
 
@@ -112,12 +105,7 @@ export function AmountFilter({ value, onChange }: Props): React.ReactElement {
       />
       {hasFilter && (
         <Hint id="filter-hint" aria-live="polite">
-          {t("filter.hint", {
-            amount: new Intl.NumberFormat("de-DE", {
-              style: "currency",
-              currency: "EUR",
-            }).format(parsedAmount),
-          })}
+          {t("filter.hint", { amount: formatCurrency(parsedAmount) })}
         </Hint>
       )}
     </FilterWrapper>

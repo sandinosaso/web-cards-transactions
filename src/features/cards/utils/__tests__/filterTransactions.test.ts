@@ -57,4 +57,13 @@ describe("filterTransactionsByMinAmount", () => {
     filterTransactionsByMinAmount(transactions, "10");
     expect(transactions).toEqual(original);
   });
+
+  it("returns all transactions when minAmount is Infinity", () => {
+    // parseFloat("Infinity") === Infinity — the UI regex blocks this, but the
+    // function must also be safe for programmatic callers.
+    // Without the isFinite() guard, filter(tx => tx.amount >= Infinity) returns []
+    // which would incorrectly hide all transactions.
+    const result = filterTransactionsByMinAmount(transactions, "Infinity");
+    expect(result).toHaveLength(4);
+  });
 });

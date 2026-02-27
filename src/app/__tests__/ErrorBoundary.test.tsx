@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ThemeProvider } from "styled-components";
 import { ErrorBoundary } from "@dkb-cofa/app/ErrorBoundary";
+import { theme } from "@dkb-cofa/app/theme";
+
+// ErrorBoundary now uses theme tokens — all renders need a ThemeProvider.
+function renderWithTheme(ui: React.ReactElement) {
+  return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+}
 
 /**
  * ErrorBoundary tests verify two user-facing behaviours:
@@ -34,7 +41,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("renders children normally when no error is thrown", () => {
-    render(
+    renderWithTheme(
       <ErrorBoundary>
         <HealthyChild />
       </ErrorBoundary>
@@ -45,7 +52,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("renders the fallback UI when a child throws", () => {
-    render(
+    renderWithTheme(
       <ErrorBoundary>
         <BrokenChild />
       </ErrorBoundary>
@@ -64,7 +71,7 @@ describe("ErrorBoundary", () => {
   });
 
   it("does not render children once an error has been caught", () => {
-    render(
+    renderWithTheme(
       <ErrorBoundary>
         <BrokenChild />
       </ErrorBoundary>
@@ -82,7 +89,7 @@ describe("ErrorBoundary", () => {
     const reloadMock = vi.fn();
     vi.stubGlobal("location", { reload: reloadMock });
 
-    render(
+    renderWithTheme(
       <ErrorBoundary>
         <BrokenChild />
       </ErrorBoundary>

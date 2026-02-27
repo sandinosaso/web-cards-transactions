@@ -8,7 +8,8 @@
     "empty": "No cards available.",
     "error": "Failed to load cards. Please try again.",
     "retry": "Retry",
-    "select": "Select card {{description}}"
+    "select": "Select card {{description}}",
+    "selectPrompt": "Select a card to view its transactions."
   },
   "filter": {
     "label": "Filter by minimum amount",
