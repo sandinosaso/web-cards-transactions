@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn, userEvent, within, expect } from "@storybook/test";
 import { CardTileComponent } from "./CardTile";
 
 const meta = {
@@ -14,7 +15,7 @@ const meta = {
     expiryDate: "12/28",
     network: "Visa",
     isSelected: false,
-    onSelect: () => undefined,
+    onSelect: fn(),
   },
 } satisfies Meta<typeof CardTileComponent>;
 
@@ -70,5 +71,29 @@ export const SharedExpenseCardSelected: Story = {
     maskedCardNumber: "1357",
     expiryDate: "03/29",
     isSelected: true,
+  },
+};
+
+// ── Edge cases ───────────────────────────────────────────────────────────────
+
+/** Verifies long cardholder names don't overflow the card layout. */
+export const LongCardholderName: Story = {
+  args: {
+    cardHolder: "Dr. Hans-Joachim Müller-Weißenberger",
+    description: "Private Card",
+  },
+};
+
+/**
+ * Verifies keyboard accessibility: Tab to focus, Enter to select.
+ * Uses Storybook's interaction testing to simulate the full flow.
+ */
+export const KeyboardSelect: Story = {
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("button", { name: args.description });
+    card.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(args.onSelect).toHaveBeenCalledWith(args.id);
   },
 };

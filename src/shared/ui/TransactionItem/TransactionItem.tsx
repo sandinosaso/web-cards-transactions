@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { formatCurrency } from "@dkb-cofa/i18n/formatCurrency";
 
 interface TransactionRowProps {
   $backgroundColor: string;
@@ -36,10 +37,7 @@ export function TransactionItem({
   amount,
   backgroundColor,
 }: Props): React.ReactElement {
-  const formattedAmount = new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
+  const formattedAmount = formatCurrency(amount);
 
   return (
     <TransactionRow $backgroundColor={backgroundColor}>

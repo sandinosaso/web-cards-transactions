@@ -15,6 +15,8 @@ export default defineConfig([
       "coverage/**",
       "playwright-report/**",
       "node_modules/**",
+      // Declaration files are pure type annotations — nothing to lint.
+      "**/*.d.ts",
     ],
   },
 

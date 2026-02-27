@@ -66,4 +66,50 @@ describe("AmountFilter", () => {
     });
     expect(input).toBeInTheDocument();
   });
+
+  it("does not call onChange when the value resets externally (cancel guard)", () => {
+    // Simulates a card switch: the parent sets value="" (URL param cleared).
+    // The external-sync effect calls cancelPendingChange() before setInputValue,
+    // so any in-flight debounced write is discarded — onChange never fires.
+    vi.useFakeTimers();
+    const { rerender } = renderWithProviders(
+      <AmountFilter value="50" onChange={mockOnChange} />
+    );
+
+    // Simulate external reset (card switch clears minAmount from URL)
+    rerender(<AmountFilter value="" onChange={mockOnChange} />);
+
+    // Advance past the full debounce window
+    act(() => {
+      vi.runAllTimers();
+    });
+
+    // onChange must NOT have been called — the reset was external, not user-typed
+    expect(mockOnChange).not.toHaveBeenCalled();
+  });
+
+  it("calls onChange exactly once after rapid keystrokes (debounce consolidation)", () => {
+    // Three fireEvent.change calls in quick succession should produce only one
+    // onChange("100") after the debounce window elapses — not three separate calls.
+    vi.useFakeTimers();
+    renderWithProviders(<AmountFilter value="" onChange={mockOnChange} />);
+
+    const input = screen.getByLabelText("Filter by minimum amount");
+
+    // Simulate typing "1", "10", "100" in rapid succession (no timer advance)
+    fireEvent.change(input, { target: { value: "1" } });
+    fireEvent.change(input, { target: { value: "10" } });
+    fireEvent.change(input, { target: { value: "100" } });
+
+    // No calls yet — still within the debounce window
+    expect(mockOnChange).not.toHaveBeenCalled();
+
+    // Flush the debounce — only the final value should be written
+    act(() => {
+      vi.runAllTimers();
+    });
+
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith("100");
+  });
 });

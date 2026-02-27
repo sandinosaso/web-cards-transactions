@@ -22,11 +22,15 @@ describe("CardTileComponent", () => {
     expect(screen.getByText("Private Card")).toBeInTheDocument();
   });
 
-  it("has role=button and is keyboard accessible", () => {
+  it("is rendered as a native button and is keyboard accessible", () => {
     renderWithProviders(<CardTileComponent {...defaultProps} />);
+    // getByRole("button") works because <button> has implicit role="button" —
+    // no need for an explicit role override.
     const card = screen.getByRole("button", { name: "Private Card" });
     expect(card).toBeInTheDocument();
-    expect(card).toHaveAttribute("tabindex", "0");
+    // Native <button> is focusable without an explicit tabindex attribute;
+    // the browser manages focus natively.
+    expect(card.tagName).toBe("BUTTON");
   });
 
   it("calls onSelect when clicked", async () => {

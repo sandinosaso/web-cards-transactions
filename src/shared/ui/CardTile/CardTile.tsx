@@ -13,9 +13,21 @@ interface CardContainerProps {
 /**
  * Sized to the ISO 7810 ID-1 standard (85.60 × 53.98 mm → aspect-ratio 1.586).
  * Decorative circles are pure CSS, no extra DOM nodes.
+ *
+ * Using a native <button> gives us keyboard behaviour (Enter/Space → click),
+ * focus management, and implicit role="button" for free — no ARIA overrides needed.
+ * The CSS reset strips browser button defaults so we can style it as a card.
  */
-const CardContainer = styled.article<CardContainerProps>`
-  /* ISO 7810 ID-1 proportions */
+const CardContainer = styled.button<CardContainerProps>`
+  /* ── Button reset ──────────────────────────────────────────────────────── */
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+
+  /* ── ISO 7810 ID-1 proportions ─────────────────────────────────────────── */
   width: 340px;
   aspect-ratio: 1.586;
   border-radius: 16px;
@@ -232,23 +244,14 @@ export const CardTileComponent = React.memo(function CardTileComponent({
     onSelect(id);
   }
 
-  function handleKeyDown(e: React.KeyboardEvent): void {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onSelect(id);
-    }
-  }
-
   return (
     <CardContainer
       $type={type}
       $isSelected={isSelected}
-      role="button"
-      tabIndex={0}
+      type="button"
       aria-pressed={isSelected}
       aria-label={description}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
     >
       <CardTop>
         <DKBBrand>DKB</DKBBrand>

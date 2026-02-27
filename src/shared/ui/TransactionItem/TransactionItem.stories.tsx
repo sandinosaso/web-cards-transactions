@@ -40,3 +40,18 @@ export const SharedExpenseCardColor: Story = {
     backgroundColor: "#7C5CFC",
   },
 };
+
+// ── Edge cases ───────────────────────────────────────────────────────────────
+
+/** Verifies layout doesn't break for amounts that produce wide formatted strings. */
+export const VeryLargeAmount: Story = {
+  args: { description: "Enterprise Contract", amount: 99999.99 },
+};
+
+/** Verifies long descriptions don't overflow or push the amount off-screen. */
+export const LongDescription: Story = {
+  args: {
+    description: "International Conference Registration Fee & Travel Expenses",
+    amount: 874.50,
+  },
+};
